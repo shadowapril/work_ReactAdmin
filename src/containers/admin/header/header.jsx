@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,Popconfirm,message} from "antd";
+import {Button,Popconfirm} from "antd";
 import {withRouter} from 'react-router-dom'
 import {FullscreenOutlined,FullscreenExitOutlined} from '@ant-design/icons'
 import screenfull from 'screenfull'
@@ -9,13 +9,15 @@ import dayjs from "dayjs";
 import './css/header.css'
 import {createDeleteUserInfoAction} from "../../../redux/action_creators/login_action";
 import {reqWeather} from "../../../api";
+import menuList from "../../../config/menuConfig";
 
 class Header extends Component {
 
     state = {
         isFull: false,
         myDate: dayjs().format('YYYY年 MM月DD日 HH:mm:ss'),
-        weatherInfo: {}
+        weatherInfo: {},
+        title:''
     }
 
     fullScreen = ()=> {
@@ -36,6 +38,7 @@ class Header extends Component {
         },1000)
 
         this.getWeather()
+        this.getTitle()
     }
 
     componentWillUnmount() {
@@ -53,6 +56,24 @@ class Header extends Component {
     getWeather = async ()=> {
         let weatherInfo = await reqWeather()
         this.setState({weatherInfo})
+    }
+
+    getTitle = ()=>{
+        let pathKey = this.props.location.pathname.split('/').reverse()[0]
+        let title = ''
+        menuList.forEach((item)=>{
+            if(item.children instanceof Array){
+                let tmp = item.children.find((citem)=>{
+                    return citem.key === pathKey
+                })
+                if(tmp) title = tmp.title
+            } else {
+                if(pathKey === item.key) title = item.title
+            }
+        })
+        this.setState({
+            title
+        })
     }
 
     render() {
@@ -80,7 +101,7 @@ class Header extends Component {
                 </div>
                 <div className="header-bottom">
                     <div className="header-bottom-left">
-                        {this.props.location.pathname}
+                        {this.props.title || this.state.title}
                     </div>
                     <div className="header-bottom-right">
                         {this.state.myDate}&nbsp;&nbsp;
@@ -95,7 +116,10 @@ class Header extends Component {
 }
 
 export default connect(
-    state => ({userInfo:state.userInfo}),
+    state => ({
+        userInfo:state.userInfo,
+        title:state.title
+    }),
     {
         deleteUser:createDeleteUserInfoAction
     }

@@ -1,0 +1,10 @@
+.nav-header{
+    display: flex;
+    height: 80px;
+    align-items: center;
+}
+
+.nav-header h1{
+    color: white;
+    font-size: 20px;
+}

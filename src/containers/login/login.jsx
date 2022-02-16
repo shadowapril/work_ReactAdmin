@@ -15,7 +15,7 @@ class Login extends Component {
 
         const {isLogin} = this.props
         if (isLogin) {
-            return <Redirect to="/admin"/>
+            return <Redirect to="/admin/home"/>
         }
 
         const onFinish = async (values) => {
@@ -26,7 +26,7 @@ class Login extends Component {
                 // 路由覆盖但是页面不会刷新
                 // 查阅资料疑似connect导致路由丢失 [https://www.h5w3.com/76159.html]，并且无法使用withRouter。 2022年2月8日17点27分，跳过此问题
                 this.props.saveUserInfo(data)
-                this.props.history.replace('/admin')
+                this.props.history.replace('/admin/home')
 
             } else {
                 message.warn(msg)

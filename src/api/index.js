@@ -38,4 +38,10 @@ export const reqWeather = ()=> {
 * */
 }
 
+// Add new category
+export const reqAddCategory = ({categoryName})=> (myAxios.post(`${BASE_URL}/manage/category/add`,{categoryName}))
+
+// Update category
+export const reqUpdateCategory = ({categoryName,categoryId})=> (myAxios.post(`${BASE_URL}/manage/category/update`,{categoryName,categoryId}))
+
 

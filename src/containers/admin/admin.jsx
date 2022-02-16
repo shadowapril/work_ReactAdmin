@@ -4,6 +4,7 @@ import {Redirect, Route, Switch} from "react-router-dom";
 import { Layout } from 'antd';
 
 import Header from "./header/header";
+import LeftNav from "./left_nav/left_nav";
 import Home from "../../components/home/home";
 import Category from "../category/category";
 import Product from "../product/product";
@@ -35,14 +36,16 @@ class Admin extends Component {
     }
 
     render() {
-            const {user, isLogin} = this.props.userInfo
+            const {isLogin} = this.props.userInfo
             if(!isLogin) {
                 return <Redirect to="/login"/>
             } else {
                 return (
 
                     <Layout className="admin-container">
-                        <Sider className="admin-sider">Sider</Sider>
+                        <Sider className="admin-sider">
+                            <LeftNav/>
+                        </Sider>
                         <Layout>
                             <Header />
                             <Content className="admin-content">
