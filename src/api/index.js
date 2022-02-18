@@ -44,4 +44,20 @@ export const reqAddCategory = ({categoryName})=> (myAxios.post(`${BASE_URL}/mana
 // Update category
 export const reqUpdateCategory = ({categoryName,categoryId})=> (myAxios.post(`${BASE_URL}/manage/category/update`,{categoryName,categoryId}))
 
+// Request Product List paged
+export const reqProductList = (pageNum,pageSize)=> (myAxios.get(`${BASE_URL}/manage/product/list`,{params:{pageNum,pageSize}}))
 
+// Update Product Status
+export const reqUpdateProdStatus = (productId,status)=> (myAxios.post(`${BASE_URL}/manage/product/updateStatus`,{productId,status}))
+
+// Request Product List paged
+export const reqSearchProduct = (pageNum,pageSize,searchType,keyWord)=> (myAxios.get(`${BASE_URL}/manage/product/search`,{params:{pageNum,pageSize,[searchType]:keyWord}}))
+
+// Request Product Info by id
+export const reqProductById = (productId)=> (myAxios.get(`${BASE_URL}/manage/product/info`,{params:{categoryId:productId}}))
+
+// Delete Product image
+export const reqDeletePicture = (name)=> (myAxios.post(`${BASE_URL}/manage/img/delete`,{name}))
+
+// Request Add Product
+export const reqAddProduct = (productObj)=> (myAxios.post(`${BASE_URL}/manage/product/add`,{...productObj}))

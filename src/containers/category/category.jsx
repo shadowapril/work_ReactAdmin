@@ -3,9 +3,11 @@ import {Card, Button, Table, Modal, message, Form, Input} from 'antd';
 import {
     PlusSquareOutlined,
 } from '@ant-design/icons';
+import {connect} from "react-redux";
 
 import {reqAddCategory, reqCategoryList, reqUpdateCategory} from '../../api/'
 import {PAGE_SIZE} from "../../config";
+import {createSaveCategoryAction} from "../../redux/action_creators/category_action";
 
 class Category extends Component {
 
@@ -26,7 +28,10 @@ class Category extends Component {
     getCategoryList = async ()=>{
         let result = await reqCategoryList()
         const {status, data, msg} = result
-        if(status===0) this.setState({categoryList:data.reverse()})
+        if(status===0) {
+            this.setState({categoryList:data.reverse()})
+            this.props.saveCategory(data)
+        }
         else message.error(msg,1)
     }
 
@@ -187,4 +192,9 @@ class Category extends Component {
     }
 }
 
-export default Category;
+export default connect(
+    state =>({}),
+    {
+        saveCategory:createSaveCategoryAction
+    }
+)(Category);

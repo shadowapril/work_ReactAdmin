@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,Popconfirm} from "antd";
+import {Button,Popconfirm, } from "antd";
 import {withRouter} from 'react-router-dom'
 import {FullscreenOutlined,FullscreenExitOutlined} from '@ant-design/icons'
 import screenfull from 'screenfull'
@@ -59,7 +59,9 @@ class Header extends Component {
     }
 
     getTitle = ()=>{
-        let pathKey = this.props.location.pathname.split('/').reverse()[0]
+        let {pathname} = this.props.location
+        let pathKey = pathname.split('/').reverse()[0]
+        if(pathname.indexOf('product') !== -1) pathKey='product'    // Hell from product detail and add_update...
         let title = ''
         menuList.forEach((item)=>{
             if(item.children instanceof Array){

@@ -1,0 +1,18 @@
+.left-top{
+    display: flex;
+    align-items: center;
+}
+
+.prod-name{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.prod-desc{
+    text-align: left;
+}
+
+.prod-detail{
+
+}
+
