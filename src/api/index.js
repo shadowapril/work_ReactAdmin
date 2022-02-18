@@ -64,3 +64,12 @@ export const reqAddProduct = (productObj)=> (myAxios.post(`${BASE_URL}/manage/pr
 
 // Request Update Product
 export const reqUpdateProduct = (productObj)=> (myAxios.post(`${BASE_URL}/manage/product/update`,{...productObj}))
+
+// Request Role List
+export const reqRoleList = ()=> (myAxios.get(`${BASE_URL}/manage/role/list`,))
+
+// Request Add Role
+export const reqAddRole = ({roleName})=> (myAxios.post(`${BASE_URL}/manage/role/add`,{roleName}))
+
+// Request Update Role
+export const reqAuthRole = (roleObj)=> (myAxios.post(`${BASE_URL}/manage/role/update`,{...roleObj,auth_time:Date.now()}))
