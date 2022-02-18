@@ -20,12 +20,12 @@ class PicturesWall extends Component {
         previewImage: '',
         previewTitle: '',
         fileList: [
-            {
+            /*{
                 uid: '-1',
-                name: 'image.png',
+                name: 'image-1563762330043.jpg',
                 status: 'done',
                 url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            },
+            },*/
         ],
     };
 
@@ -67,6 +67,14 @@ class PicturesWall extends Component {
             result.push(item.name)
         })
         return result
+    }
+
+    setFileList = (imgArr)=>{
+        let fileList = []
+        imgArr.forEach((item,index)=>{
+            fileList.push({uid:-index,name:item,url:`${BASE_URL}/upload/${item}`})
+        })
+        this.setState({fileList})
     }
 
     render() {

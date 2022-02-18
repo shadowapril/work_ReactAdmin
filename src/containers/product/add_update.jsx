@@ -3,7 +3,7 @@ import {Button, Card, Form, Input, message, Select} from "antd";
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import {connect} from "react-redux";
 
-import {reqAddProduct, reqCategoryList} from "../../api";
+import {reqAddProduct, reqCategoryList, reqUpdateProduct} from "../../api";
 import PicturesWall from "./picture_wall";
 import RichTextEditor from "./rich_text_editor";
 
@@ -41,18 +41,22 @@ class AddUpdate extends Component {
                 let result = productList.find((item)=>{
                     return item._id === id
                 })
-                console.log(result)
-                if(result) this.setState({...result},() => {
-                    /*
-                    * 这边是巨坑，需要注意,需要初始化表单列表
-                    * 如果不重置无法回显表单以及照片还有富文本
-                    */
-                    this.formRef.current.resetFields();
-                    //回显照片
-                    //this.picturesWall.current.setImgArr(imgs);
-                    //回显富文本
-                    //this.richTextEditor.current.setRichText(detail);
-                })
+                if(result) {
+                    const {imgs,detail} = result
+                    this.picturesWall.current.setFileList(imgs)
+                    this.richTextEditor.current.setRichText(detail)
+                    this.setState({...result},() => {
+                        /*
+                        * 这边是巨坑，需要注意,需要初始化表单列表
+                        * 如果不重置无法回显表单以及照片还有富文本
+                        */
+                        this.formRef.current.resetFields();
+                        //回显照片
+                        //this.picturesWall.current.setImgArr(imgs);
+                        //回显富文本
+                        //this.richTextEditor.current.setRichText(detail);
+                    })
+                }
             }
         }
     }
@@ -65,22 +69,26 @@ class AddUpdate extends Component {
     }
 
     handleFinish = async (values)=>{
+        const {operType,_id} = this.state
         let imgs = this.picturesWall.current.getImgArr()
-        let detail = this.refs.richTextEditor.getRichText()
+        let detail = this.richTextEditor.current.getRichText()
         let pCategoryId = values.categoryId
-        console.log(values)
-        console.log(values.categoryId)
-        let result = await reqAddProduct({...values,imgs,detail,pCategoryId})
+        let result
+        if(operType==='add'){
+            result = await reqAddProduct({...values,imgs,detail,pCategoryId})
+        } else {
+            result = await reqUpdateProduct({...values,imgs,detail,pCategoryId,_id})
+        }
         const {status} = result
         if(status===0) {
-            message.success('Add product success!')
+            message.success('Operation success!')
             this.props.history.replace('/admin/prod_about/product')
         }
-        else message.error('Add product failed!')
+        else message.error('Operation failed!')
     }
 
     render() {
-        const {operType,name} = this.state
+        const {operType,name, desc, price, categoryId,} = this.state
         return (
             <Fragment>
                 <Card title={
@@ -93,20 +101,23 @@ class AddUpdate extends Component {
                 }>
                     <Form labelCol={{md: 5}} wrapperCol={{md: 14}} onFinish={this.handleFinish} ref={this.formRef}>
                         <Form.Item label="Name" name="name"
-                                   initialValue={name}
+                                   initialValue={name||''}
                                    rules={[{required: true, whitespace: true, message: 'Please input product name'}]}>
                             <Input autoComplete="off" placeholder={name}/>
                         </Form.Item>
                         <Form.Item label="Description" name="desc"
+                                   initialValue={desc||''}
                                    rules={[{required: true, whitespace: true, message: 'Please input product description'}]}>
                             <Input autoComplete="off" placeholder="Please input product description"/>
                         </Form.Item>
                         <Form.Item label="Price" name="price"
+                                   initialValue={price||''}
                                    rules={[{required: true, message: 'Please input product price'}]}>
                             <Input type="number" autoComplete="off" addonBefore="$" addonAfter="Dollar"
                                    placeholder="Please input product price and number required"/>
                         </Form.Item>
                         <Form.Item label="Category" name="categoryId"
+                                   initialValue={categoryId || ''}
                                    rules={[{required: true, message: 'Please choose product category'}]}>
                             <Select allowClear placeholder={"Please choose product category"}>
                                 <Option value=''>Please select product category</Option>
@@ -121,7 +132,7 @@ class AddUpdate extends Component {
                             <PicturesWall ref={this.picturesWall}/>
                         </Form.Item>
                         <Form.Item label="Product details" wrapperCol={{md: 14}}>
-                            <RichTextEditor ref="richTextEditor" />
+                            <RichTextEditor ref={this.richTextEditor} />
                         </Form.Item>
                         <Form.Item wrapperCol={{offset: 10}}>
                             <Button type="primary" htmlType="submit">

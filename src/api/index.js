@@ -61,3 +61,6 @@ export const reqDeletePicture = (name)=> (myAxios.post(`${BASE_URL}/manage/img/d
 
 // Request Add Product
 export const reqAddProduct = (productObj)=> (myAxios.post(`${BASE_URL}/manage/product/add`,{...productObj}))
+
+// Request Update Product
+export const reqUpdateProduct = (productObj)=> (myAxios.post(`${BASE_URL}/manage/product/update`,{...productObj}))
