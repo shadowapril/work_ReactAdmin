@@ -12,22 +12,37 @@ const { SubMenu,Item } = Menu;
 
 class LeftNav extends Component {
 
+    hasAuth = (item)=>{
+
+        const {username,menus} = this.props
+        if(username==='admin') return true
+        else if(!item.children){
+            return menus.find((item2)=>{return item2 === item.key})
+        } else if (item.children){
+            return item.children.some((item3)=>{return menus.indexOf(item3.key) !== -1})
+        } else return false
+
+    }
+
     createMenu = (target)=>{
         return target.map((item)=>{
-            const icon = React.createElement(Icon[item.icon],{},null)
-            if(!item.children){
-                return(
-                    <Item key={item.key} icon={icon} onClick={()=>{this.props.saveTitle(item.title)}}>
-                        <Link to={item.path}>
-                            {item.title}
-                        </Link>
-                    </Item>)
-            } else {
-                return(
-                    <SubMenu key={item.key} icon={icon} title={item.title}>
-                        {this.createMenu(item.children)}
-                    </SubMenu>
-                )
+            // hasAuth?
+            if(this.hasAuth(item)) {
+                const icon = React.createElement(Icon[item.icon],{},null)
+                if(!item.children){
+                    return(
+                        <Item key={item.key} icon={icon} onClick={()=>{this.props.saveTitle(item.title)}}>
+                            <Link to={item.path}>
+                                {item.title}
+                            </Link>
+                        </Item>)
+                } else {
+                    return(
+                        <SubMenu key={item.key} icon={icon} title={item.title}>
+                            {this.createMenu(item.children)}
+                        </SubMenu>
+                    )
+                }
             }
         })
     }
@@ -53,7 +68,10 @@ class LeftNav extends Component {
 }
 
 export default connect(
-    state =>({}),
+    state =>({
+        menus:state.userInfo.user.role.menus,
+        username:state.userInfo.user.username,
+    }),
     {
         saveTitle:createSaveTitleAction
     }

@@ -99,10 +99,11 @@ class Role extends Component {
     }
 
     showAdd = ()=>{
-        this.formRef.current.resetFields();
         this.setState({
             isShowAdd:true
         })
+        this.formRef.current.resetFields();
+
     }
 
     // tree call
